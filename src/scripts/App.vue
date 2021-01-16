@@ -18,6 +18,14 @@ div
       )
       button(type="submit", :disabled="$data.inputAjaxFile == null") 送信
   .block
+    p ajaxでPOST送信(dropdown版)
+    form(@submit="onDropAjaxSubmit")
+      DropdownImage(
+        :file="$data.dropAjaxFile"
+        @change="$data.dropAjaxFile = $event"
+      )
+      button(type="submit", :disabled="$data.dropAjaxFile == null") 送信
+  .block
     p アップロード済みファイルリスト
     ul
       template(v-for="filePath in $data.uploadedFilePaths")
@@ -34,6 +42,7 @@ import { API_ROOT } from '~/constants/Api.ts';
 
 // components
 import InputImage from '~/components/InputImage.vue';
+import DropdownImage from '~/components/DropdownImage.vue';
 
 const axios = axiosBase.create({
   baseURL: API_ROOT,
@@ -43,17 +52,20 @@ interface IData {
   API_ROOT: string;
   uploadedFilePaths: Array<string>;
   inputAjaxFile: File | null;
+  dropAjaxFile: File | null;
 }
 
 export default Vue.extend({
   components: {
     InputImage,
+    DropdownImage,
   },
   data(): IData {
     return {
       API_ROOT,
       uploadedFilePaths: [],
       inputAjaxFile: null,
+      dropAjaxFile: null,
     };
   },
   async created() {
@@ -67,13 +79,9 @@ export default Vue.extend({
       });
       this.uploadedFilePaths = res.data;
     },
-    async onInputAjaxSubmit(event: Event) {
-      event.preventDefault();
-      if (this.inputAjaxFile == null) {
-        return;
-      }
+    async uploadImageFile(imageFile: File) {
       const formData = new FormData();
-      formData.append('file', this.inputAjaxFile);
+      formData.append('file', imageFile);
       await axios.request({
         method: 'post',
         url: '/api/upload',
@@ -81,6 +89,20 @@ export default Vue.extend({
       });
       console.log('upload succeeded!');
       await this.fetchUploadedFiles();
+    },
+    async onInputAjaxSubmit(event: Event) {
+      event.preventDefault();
+      if (this.inputAjaxFile == null) {
+        return;
+      }
+      await this.uploadImageFile(this.inputAjaxFile);
+    },
+    async onDropAjaxSubmit(event: Event) {
+      event.preventDefault();
+      if (this.dropAjaxFile == null) {
+        return;
+      }
+      await this.uploadImageFile(this.dropAjaxFile);
     }
   }
 });
