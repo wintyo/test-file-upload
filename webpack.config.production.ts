@@ -7,7 +7,7 @@ import baseConfig from './webpack.config.base';
 const config = merge(baseConfig, {
   mode: 'production',
   output: {
-    path: path.resolve(__dirname, './server/public'),
+    path: path.resolve(__dirname, './server/static'),
     publicPath: './',
   },
 } as webpack.Configuration);

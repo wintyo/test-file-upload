@@ -1,6 +1,6 @@
 node_modules/
 dist/
-.nuxt/
+server/static/
 
 # エラー関係
 package-lock.json

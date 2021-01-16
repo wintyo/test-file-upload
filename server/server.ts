@@ -13,8 +13,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// public以下に配置したファイルは直リンクで見れるようにする
-app.use(Express.static(path.resolve(__dirname, 'public')));
+// static以下に配置したファイルは直リンクで見れるようにする
+app.use(Express.static(path.resolve(__dirname, 'static')));
 
 // 疎通テスト用のレスポンス
 app.get('/api/health', (req, res) => {

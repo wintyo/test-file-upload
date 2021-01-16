@@ -2,6 +2,7 @@ import * as path from 'path';
 import * as webpack from 'webpack';
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const config: webpack.Configuration = {
   entry: {
@@ -46,6 +47,15 @@ const config: webpack.Configuration = {
             }],
           },
         ]
+      },
+      {
+        test: /.(sass|scss)$/,
+        use: [
+          'css-hot-loader',
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader',
+        ],
       }
     ]
   },
@@ -62,6 +72,9 @@ const config: webpack.Configuration = {
       inject: true,
     }),
     new VueLoaderPlugin(),
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+    }),
   ],
 };
 

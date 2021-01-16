@@ -1,6 +1,6 @@
 <template lang="pug">
 div
-  p test--!
+  p.test test--!
 </template>
 
 <script lang="ts">
@@ -11,6 +11,8 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="css" scoped>
-
+<style lang="scss" scoped>
+.test {
+  color: red;
+}
 </style>
