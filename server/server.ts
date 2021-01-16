@@ -1,6 +1,7 @@
 import Express from 'express';
 import http from 'http';
 import path from 'path';
+import fs from 'fs';
 import multer from 'multer';
 
 const app = Express();
@@ -26,14 +27,29 @@ app.use((req, res, next) => {
 
 // static以下に配置したファイルは直リンクで見れるようにする
 app.use(Express.static(path.resolve(__dirname, 'static')));
+// uploads以下のファイルを見れるようにする
+app.use('/uploads', Express.static(path.resolve(__dirname, './uploads')));
 
 // 疎通テスト用のレスポンス
 app.get('/api/health', (req, res) => {
   return res.send('I am OK!');
 });
 
+// 画像アップロード
 app.post('/api/upload', upload.single('file'), (req, res) => {
   res.send('upload succeeded.');
+});
+
+// アップロードファイル一覧
+app.get('/api/upload-files', (req, res) => {
+  fs.readdir(path.resolve(__dirname, './uploads'), (err, files) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+    res.send(files);
+  });
 });
 
 server.listen(port, () => {

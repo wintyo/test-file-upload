@@ -17,6 +17,13 @@ div
         @change="$data.inputAjaxFile = $event"
       )
       button(type="submit", :disabled="$data.inputAjaxFile == null") 送信
+  .block
+    p アップロード済みファイルリスト
+    ul
+      template(v-for="filePath in $data.uploadedFilePaths")
+        li
+          img(:src="`${$data.API_ROOT}/uploads/${filePath}`")
+          p {{ filePath }}
 </template>
 
 <script lang="ts">
@@ -34,6 +41,7 @@ const axios = axiosBase.create({
 
 interface IData {
   API_ROOT: string;
+  uploadedFilePaths: Array<string>;
   inputAjaxFile: File | null;
 }
 
@@ -44,10 +52,21 @@ export default Vue.extend({
   data(): IData {
     return {
       API_ROOT,
+      uploadedFilePaths: [],
       inputAjaxFile: null,
     };
   },
+  async created() {
+    await this.fetchUploadedFiles();
+  },
   methods: {
+    async fetchUploadedFiles() {
+      const res = await axios.request<Array<string>>({
+        method: 'get',
+        url: '/api/upload-files'
+      });
+      this.uploadedFilePaths = res.data;
+    },
     async onInputAjaxSubmit(event: Event) {
       event.preventDefault();
       if (this.inputAjaxFile == null) {
@@ -61,6 +80,7 @@ export default Vue.extend({
         data: formData,
       });
       console.log('upload succeeded!');
+      await this.fetchUploadedFiles();
     }
   }
 });
