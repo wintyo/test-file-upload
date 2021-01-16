@@ -11,6 +11,7 @@
   "author": "wintyo <wintyo1024@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.21.1",
     "express": "^4.17.1",
     "multer": "^1.4.2",
     "reset-css": "^5.0.1",
