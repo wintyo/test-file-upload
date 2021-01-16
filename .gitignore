@@ -1,6 +1,7 @@
 node_modules/
 dist/
 server/static/
+server/uploads/
 
 # エラー関係
 package-lock.json

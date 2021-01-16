@@ -17,11 +17,8 @@
     "baseUrl": "./",
     "paths": {
       "~/*": [
-        "src/*"
+        "src/scripts/*"
       ],
-      "@/*": [
-        "src/*"
-      ]
     },
     "jsx": "preserve",
     "jsxFactory": "h"
