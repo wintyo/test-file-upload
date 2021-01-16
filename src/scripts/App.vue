@@ -12,7 +12,7 @@ div
   .block
     p ajaxでPOST送信(input版)
     form(@submit="onInputAjaxSubmit")
-      InputFile(
+      InputImage(
         :file="$data.inputAjaxFile"
         @change="$data.inputAjaxFile = $event"
       )
@@ -33,7 +33,7 @@ import axiosBase from 'axios';
 import { API_ROOT } from '~/constants/Api.ts';
 
 // components
-import InputFile from '~/components/InputFile.vue';
+import InputImage from '~/components/InputImage.vue';
 
 const axios = axiosBase.create({
   baseURL: API_ROOT,
@@ -47,7 +47,7 @@ interface IData {
 
 export default Vue.extend({
   components: {
-    InputFile,
+    InputImage,
   },
   data(): IData {
     return {
