@@ -1,4 +1,5 @@
 import '../css/base.scss';
+import './polyfills/toBlob';
 
 import Vue from 'vue';
 
