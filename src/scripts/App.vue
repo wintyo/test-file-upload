@@ -35,6 +35,15 @@ div
         input(v-model="$data.base64FileName", type="text")
         button(type="submit", :disabled="$data.base64FileName === ''") 送信
   .block
+    p canvas画像を送信(blob版)
+    form(@submit="onBlobCanvasSubmit")
+      CanvasImage(
+        ref="blobCanvasImage"
+      )
+      div
+        input(v-model="$data.blobFileName", type="text")
+        button(type="submit", :disabled="$data.blobFileName === ''") 送信
+  .block
     p アップロード済みファイルリスト
     ul
       template(v-for="filePath in $data.uploadedFilePaths")
@@ -64,6 +73,7 @@ interface IData {
   inputAjaxFile: File | null;
   dropAjaxFile: File | null;
   base64FileName: string;
+  blobFileName: string;
 }
 
 export default Vue.extend({
@@ -79,6 +89,7 @@ export default Vue.extend({
       inputAjaxFile: null,
       dropAjaxFile: null,
       base64FileName: '',
+      blobFileName: '',
     };
   },
   async created() {
@@ -93,6 +104,7 @@ export default Vue.extend({
       this.uploadedFilePaths = res.data;
     },
     async uploadImageFile(imageFile: File) {
+      console.log(imageFile);
       const formData = new FormData();
       formData.append('file', imageFile);
       await axios.request({
@@ -132,6 +144,16 @@ export default Vue.extend({
       });
       console.log('upload succeeded!');
       await this.fetchUploadedFiles();
+    },
+    async onBlobCanvasSubmit(event: Event) {
+      event.preventDefault();
+      const blobCanvasImage = this.$refs.blobCanvasImage as InstanceType<typeof CanvasImage>;
+
+      const blob = await blobCanvasImage.getBlob();
+      // image/pngとかなので、後ろの方が拡張子
+      const ext = blob.type.split('/')[1];
+      console.log(blob);
+      await this.uploadImageFile(new File([blob], `${this.blobFileName}.${ext}`, { type: blob.type }));
     },
   }
 });

@@ -55,6 +55,18 @@ export default Vue.extend({
       const elCanvas = this.$refs.elCanvas as HTMLCanvasElement;
       return elCanvas.toDataURL('image/png');
     },
+    getBlob() {
+      return new Promise<Blob>((resolve, reject) => {
+        const elCanvas = this.$refs.elCanvas as HTMLCanvasElement;
+        elCanvas.toBlob((blob) => {
+          if (blob == null) {
+            reject();
+            return;
+          }
+          resolve(blob);
+        });
+      });
+    },
     onMouseDown(event: MouseEvent) {
       this.isDragging = true;
       this.prevPos = {
