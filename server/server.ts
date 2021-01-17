@@ -11,11 +11,6 @@ const server = http.createServer(app);
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: true }));
 
-fs.mkdir(path.resolve(__dirname, './tmp/'), (err) => {
-  if (err) {
-    console.error(err);
-  }
-});
 fs.mkdir(path.resolve(__dirname, './uploads/'), (err) => {
   if (err) {
     console.error(err);
