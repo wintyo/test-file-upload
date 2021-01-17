@@ -23,7 +23,7 @@ fs.mkdir(path.resolve(__dirname, './uploads/'), (err) => {
 });
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, path.resolve(__dirname, './tmp/'));
+    callback(null, path.resolve(__dirname, './uploads/'));
   },
   filename: (req, file, callback) => {
     callback(null, file.originalname);
@@ -40,8 +40,8 @@ app.use((req, res, next) => {
 
 // static以下に配置したファイルは直リンクで見れるようにする
 app.use(Express.static(path.resolve(__dirname, 'static')));
-// tmp以下のファイルを見れるようにする
-app.use('/tmp', Express.static(path.resolve(__dirname, './tmp')));
+// uploads以下のファイルを見れるようにする
+app.use('/uploads', Express.static(path.resolve(__dirname, './uploads')));
 
 // 疎通テスト用のレスポンス
 app.get('/api/health', (req, res) => {
@@ -64,7 +64,7 @@ app.post('/api/upload-base64', (req, res) => {
   const ext = match[1];
   const base64Content = base64.split(',')[1];
   const buffer = Buffer.from(base64Content, 'base64');
-  fs.writeFile(path.resolve(__dirname, `./tmp/${fileName}.${ext}`), buffer, (err) => {
+  fs.writeFile(path.resolve(__dirname, `./uploads/${fileName}.${ext}`), buffer, (err) => {
     if (err) {
       console.error(err);
       res.status(500).send('error');
@@ -76,7 +76,7 @@ app.post('/api/upload-base64', (req, res) => {
 
 // アップロードファイル一覧
 app.get('/api/upload-files', (req, res) => {
-  fs.readdir(path.resolve(__dirname, './tmp'), (err, files) => {
+  fs.readdir(path.resolve(__dirname, './uploads'), (err, files) => {
     if (err) {
       console.error(err);
       res.status(500).send('Internal Server Error');
