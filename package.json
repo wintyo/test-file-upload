@@ -13,7 +13,7 @@
     "server": "nodemon --exec cross-env TS_NODE_PROJECT=tsconfig-for-node.json ts-node ./server/server.ts --watch server",
     "server:build": "cross-env TS_NODE_PROJECT=tsconfig-for-node.json webpack-cli bundle --config server/webpack.config.server.ts",
     "_heroku用のコマンド": "",
-    "heroku-postbuild": "yarn server-build && yarn build"
+    "heroku-postbuild": "yarn server:build && yarn build"
   },
   "author": "wintyo <wintyo1024@gmail.com>",
   "license": "MIT",
