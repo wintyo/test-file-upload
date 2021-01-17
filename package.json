@@ -1,12 +1,19 @@
 {
-  "name": "test-image-upload",
+  "name": "test-file-upload",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": ">=12.16.0"
+  },
   "scripts": {
     "start": "cross-env TS_NODE_PROJECT=tsconfig-for-node.json webpack-cli serve --config webpack.config.development.ts",
     "build": "rimraf server/static && cross-env TS_NODE_PROJECT=tsconfig-for-node.json webpack-cli bundle --config webpack.config.production.ts",
-    "server": "nodemon --exec cross-env TS_NODE_PROJECT=tsconfig-for-node.json ts-node ./server/server.ts --watch server"
+    "_サーバー関係": "",
+    "server": "nodemon --exec cross-env TS_NODE_PROJECT=tsconfig-for-node.json ts-node ./server/server.ts --watch server",
+    "server:build": "cross-env TS_NODE_PROJECT=tsconfig-for-node.json webpack-cli bundle --config server/webpack.config.server.ts",
+    "_heroku用のコマンド": "",
+    "heroku-postbuild": "yarn server-build && yarn build"
   },
   "author": "wintyo <wintyo1024@gmail.com>",
   "license": "MIT",
@@ -43,6 +50,7 @@
     "webpack": "^4.46.0",
     "webpack-cli": "^4.3.1",
     "webpack-dev-server": "^3.11.2",
-    "webpack-merge": "^5.7.3"
+    "webpack-merge": "^5.7.3",
+    "webpack-node-externals": "^2.5.2"
   }
 }
