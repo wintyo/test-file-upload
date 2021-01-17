@@ -8,6 +8,9 @@ const app = Express();
 const port = process.env.PORT || 9000;
 const server = http.createServer(app);
 
+app.use(Express.json());
+app.use(Express.urlencoded({ extended: true }));
+
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     callback(null, path.resolve(__dirname, './uploads/'));
@@ -38,6 +41,27 @@ app.get('/api/health', (req, res) => {
 // 画像アップロード
 app.post('/api/upload', upload.single('file'), (req, res) => {
   res.send('upload succeeded.');
+});
+
+// 画像アップロード（base64版）
+app.post('/api/upload-base64', (req, res) => {
+  const { fileName, base64 } = req.body as { fileName: string, base64: string };
+  const match = base64.match(/^data:image\/([a-z]+);/);
+  if (match == null) {
+    res.status(400).send('error');
+    return;
+  }
+  const ext = match[1];
+  const base64Content = base64.split(',')[1];
+  const buffer = Buffer.from(base64Content, 'base64');
+  fs.writeFile(path.resolve(__dirname, `./uploads/${fileName}.${ext}`), buffer, (err) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('error');
+      return;
+    }
+    res.send('upload succeeded.');
+  });
 });
 
 // アップロードファイル一覧

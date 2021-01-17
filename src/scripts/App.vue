@@ -26,6 +26,15 @@ div
       )
       button(type="submit", :disabled="$data.dropAjaxFile == null") 送信
   .block
+    p canvas画像を送信(base64版)
+    form(@submit="onBase64CanvasSubmit")
+      CanvasImage(
+        ref="base64CanvasImage"
+      )
+      div
+        input(v-model="$data.base64FileName", type="text")
+        button(type="submit", :disabled="$data.base64FileName === ''") 送信
+  .block
     p アップロード済みファイルリスト
     ul
       template(v-for="filePath in $data.uploadedFilePaths")
@@ -43,6 +52,7 @@ import { API_ROOT } from '~/constants/Api.ts';
 // components
 import InputImage from '~/components/InputImage.vue';
 import DropdownImage from '~/components/DropdownImage.vue';
+import CanvasImage from '~/components/CanvasImage.vue';
 
 const axios = axiosBase.create({
   baseURL: API_ROOT,
@@ -53,12 +63,14 @@ interface IData {
   uploadedFilePaths: Array<string>;
   inputAjaxFile: File | null;
   dropAjaxFile: File | null;
+  base64FileName: string;
 }
 
 export default Vue.extend({
   components: {
     InputImage,
     DropdownImage,
+    CanvasImage,
   },
   data(): IData {
     return {
@@ -66,6 +78,7 @@ export default Vue.extend({
       uploadedFilePaths: [],
       inputAjaxFile: null,
       dropAjaxFile: null,
+      base64FileName: '',
     };
   },
   async created() {
@@ -103,7 +116,23 @@ export default Vue.extend({
         return;
       }
       await this.uploadImageFile(this.dropAjaxFile);
-    }
+    },
+    async onBase64CanvasSubmit(event: Event) {
+      event.preventDefault();
+      const base64CanvasImage = this.$refs.base64CanvasImage as InstanceType<typeof CanvasImage>;
+      const base64 = base64CanvasImage.getBase64();
+
+      await axios.request({
+        method: 'post',
+        url: '/api/upload-base64',
+        data: {
+          fileName: this.base64FileName,
+          base64,
+        },
+      });
+      console.log('upload succeeded!');
+      await this.fetchUploadedFiles();
+    },
   }
 });
 </script>
