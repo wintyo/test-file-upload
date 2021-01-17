@@ -3,6 +3,7 @@ dist/
 server/server.js
 server/static/
 server/uploads/
+server/tmp/
 
 # エラー関係
 package-lock.json

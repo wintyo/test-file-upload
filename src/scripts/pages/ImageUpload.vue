@@ -48,7 +48,7 @@ div
     ul
       template(v-for="filePath in $data.uploadedFilePaths")
         li
-          img(:src="`${$data.API_ROOT}/uploads/${filePath}`")
+          img(:src="`${$data.API_ROOT}/tmp/${filePath}`")
           p {{ filePath }}
 </template>
 
